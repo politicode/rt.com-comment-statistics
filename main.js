@@ -1,4 +1,7 @@
-var author = 'rtrtrtsblog'; // MUST BE SET WITH COMMENT SYSTEM NAME
+var authorAliases = [
+
+]; //MUST BE SET WITH COMMENT SYSTEM NAME
+var author = authorAliases[authorAliases.length - 1];
 
 /*------------------------------------------------------------------------------------------------------*/
 // PREPARE
@@ -125,23 +128,35 @@ update = setInterval(function(){
         if(run > 0){
 
             var post;
+            var postAuthorName;
+            var postedByAuthorAlias;
             var i = -1, l = page.content.length;
+            var k, m = authorAliases.length;
             var numOccurrences;
-            for (var k in result.keys) {
-                result.keys[k].count = 0;
+            for (var n in result.keys) {
+                result.keys[n].count = 0;
             }
             while (++i < l) {
                 post = page.content[i];
-                if(post.author.name == author){
+                postAuthorName = post.author.name;
+                k = -1;
+                while(++k < m){
+                    if(postAuthorName == authorAliases[k]){
+                        postedByAuthorAlias = true;
+                        break;
+                    }
+                }
+                if(postedByAuthorAlias){
                     continue;
                 }
-                for (var k in result.keys) {
-                    numOccurrences = post.message.count(k);
+
+                for (var o in result.keys) {
+                    numOccurrences = post.message.count(o);
                     if (numOccurrences > 0) {
 
-                        console.log('--> Found occurrence of key: ' + k + '!!!');
+                        console.log('--> Found occurrence of key: ' + o + '!!!');
                         console.log('   '+ post.message);
-                        result.keys[k].count += numOccurrences;
+                        result.keys[o].count += numOccurrences;
                     }
                 }
             }
